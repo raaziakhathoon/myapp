@@ -1,0 +1,25 @@
+language: node_js
+node_js:
+- 8
+branches:
+  only:
+  - master
+install:
+- npm install
+script:
+- if [ "$TRAVIS_BRANCH" = "master" ]; then npm run build; fi
+deploy:
+- provider: S3
+  region: us-east-1
+  access_key_id: "$AWS_ACCESS_KEY"
+  secret_access_key:
+    secure: "$AWS_SECRETKEY"
+  bucket: "$AWS_S3_BUCKET"
+  skip_cleanup: true
+  local_dir: "dist"
+  acl: public_read
+  on:
+    repo: theiofactory/react
+    branch: master
+after_deploy:
+- echo "Done Deploying!"
