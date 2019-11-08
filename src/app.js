@@ -16,6 +16,7 @@ import vehicleMakeComponent from '@/Components/vehicleMake';
 import vehicleModelComponent from '@/Components/vehicleModel';
 import DriverComponent from '@/Components/Driver';
 import TicketComponent from '@/Components/Ticket';
+import UserComponent from '@/Components/User';
 
 import '@/app.scss';
 
@@ -28,8 +29,9 @@ const App = () => (
             <AuthenticatedRoute path="/vehicleColor" component={vehicleColorComponent} />
             <AuthenticatedRoute path="/vehicleMake" component={vehicleMakeComponent} />
             <AuthenticatedRoute path="/vehicleModel" component={vehicleModelComponent} />
-            <AuthenticatedRoute path="/Driver" component={DriverComponent} />
-            <AuthenticatedRoute path="/Ticket" component={TicketComponent} />
+            <AuthenticatedRoute path="/driver" component={DriverComponent} />
+            <AuthenticatedRoute path="/ticket" component={TicketComponent} />
+            <AuthenticatedRoute path="/user" component={UserComponent} />
         </Fragment>
     </BrowserRouter>
 );

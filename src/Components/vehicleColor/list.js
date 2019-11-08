@@ -19,13 +19,20 @@ class vehicleColorComponent extends Component {
         };
     }
 
+    async componentDidMount() {
+        const { data } = await axios.get(`${ process.env.API_URI }/vehicleColor`);
+        this.setState({
+            vehicleColorList: data,
+        });
+    }
+
     // eslint-disable-next-line class-methods-use-this
     // eslint-disable-next-line react/sort-comp
     renderColumn() {
         return ([
             {
-                Header: 'vehicleColor Name',
-                accessor: 'vehicleColorName',
+                Header: 'Vehicle Color',
+                accessor: 'vehicleColor',
             },
             {
                 Header: 'Action',
@@ -39,7 +46,7 @@ class vehicleColorComponent extends Component {
     renderTableData() {
         const { vehicleColorList } = this.state;
         return vehicleColorList.map(e => ({
-            vehicleColorName: e.vehicleColorName,
+            vehicleColor: e.vehicleColor,
             action: e._id,
         }));
     }
@@ -53,9 +60,8 @@ class vehicleColorComponent extends Component {
                 columns={[{ Header: '', columns: this.renderColumn() }]}
                 noDataText="No Record Found"
                 data={rows}
-                showPageSizeOptions={false}
-                pageSize={3}
-                showPagination={false}
+                showPageSizeOptions
+                showPagination
             />
         );
     }
@@ -81,10 +87,17 @@ class vehicleColorComponent extends Component {
         window.$('#vehicleColorCreate').modal('hide');
     }
 
-    handleSubmit() {
+    async handleSubmit() {
         const { vehicleColorName } = this.state;
         // eslint-disable-next-line no-console
         console.log('vehicleColor: ', vehicleColorName);
+
+        await axios.post(`${ process.env.API_URI }/vehicleColor`, { vehicleColor: vehicleColorName });
+        const { data } = await axios.get(`${ process.env.API_URI }/vehicleColor`);
+        this.setState({
+            vehicleColorList: data,
+        });
+        window.$('#vehicleColorCreate').modal('hide');
     }
 
     renderModel() {
@@ -104,7 +117,7 @@ class vehicleColorComponent extends Component {
                             <div className="row">
                                 <div className="col-lg-6">
                                     <div className="form-group">
-                                        <label className="form-label">vehicleColor Name</label>
+                                        <label className="form-label">vehicle Color</label>
                                         <div className="controls">
                                             <input type="text" className="form-control" name="vehicleColorName" value={vehicleColorName} onChange={(e) => { this.handleChange('vehicleColorName', e); }} />
                                         </div>

@@ -27,9 +27,6 @@ module.exports = {
             "specialLink": [ "to" ]
         }],
         "indent": ["error", 4, { "SwitchCase": 1 }],
-        "import/no-extraneous-dependencies": ["error", {"devDependencies": [
-            'src/**/**/*.test.js',
-        ]}],
     },
     "parser": "babel-eslint",
     "settings": {

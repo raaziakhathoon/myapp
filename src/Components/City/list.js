@@ -6,17 +6,24 @@ import './index.scss';
 
 /**
  * @class
- * @name City
+ * @name city
  * @extends Component
- * @description City Component mounts at `/` route
+ * @description city Component mounts at `/` route
  */
-class CityComponent extends Component {
+class cityComponent extends Component {
     constructor(props) {
         super(props);
         this.state = {
             cityList: [],
             cityName: '',
         };
+    }
+
+    async componentDidMount() {
+        const { data } = await axios.get(`${ process.env.API_URI }/city`);
+        this.setState({
+            cityList: data,
+        });
     }
 
     // eslint-disable-next-line class-methods-use-this
@@ -53,9 +60,8 @@ class CityComponent extends Component {
                 columns={[{ Header: '', columns: this.renderColumn() }]}
                 noDataText="No Record Found"
                 data={rows}
-                showPageSizeOptions={false}
-                pageSize={3}
-                showPagination={false}
+                showPageSizeOptions
+                showPagination
             />
         );
     }
@@ -69,7 +75,7 @@ class CityComponent extends Component {
     }
 
     // eslint-disable-next-line class-methods-use-this
-    handleCreateCity() {
+    handleCreatecity() {
         window.$('#cityCreate').modal('show');
     }
 
@@ -81,9 +87,17 @@ class CityComponent extends Component {
         window.$('#cityCreate').modal('hide');
     }
 
-    handleSubmit() {
+    async handleSubmit() {
         const { cityName } = this.state;
+        // eslint-disable-next-line no-console
         console.log('city: ', cityName);
+
+        await axios.post(`${ process.env.API_URI }/city`, { cityName });
+        const { data } = await axios.get(`${ process.env.API_URI }/city`);
+        this.setState({
+            cityList: data,
+        });
+        window.$('#cityCreate').modal('hide');
     }
 
     renderModel() {
@@ -128,7 +142,7 @@ class CityComponent extends Component {
                     <header className="panel_header">
                         <h2 className="title pull-left">City</h2>
                         <div className="actions panel_actions pull-right">
-                            <button type="submit" className="btn btn-success" onClick={() => { this.handleCreateCity(); }}>Add City</button>
+                            <button type="submit" className="btn btn-success" onClick={() => { this.handleCreatecity(); }}>Add City</button>
                         </div>
                     </header>
                 </section>
@@ -155,4 +169,5 @@ class CityComponent extends Component {
     }
 }
 
-export default CityComponent;
+export default cityComponent;
+

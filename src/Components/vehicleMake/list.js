@@ -19,13 +19,20 @@ class vehicleMakeComponent extends Component {
         };
     }
 
+    async componentDidMount() {
+        const { data } = await axios.get(`${ process.env.API_URI }/vehicleMake`);
+        this.setState({
+            vehicleMakeList: data,
+        });
+    }
+
     // eslint-disable-next-line class-methods-use-this
     // eslint-disable-next-line react/sort-comp
     renderColumn() {
         return ([
             {
-                Header: 'vehicleMake Name',
-                accessor: 'vehicleMakeName',
+                Header: 'Vehicle Make',
+                accessor: 'vehicleMake',
             },
             {
                 Header: 'Action',
@@ -39,7 +46,7 @@ class vehicleMakeComponent extends Component {
     renderTableData() {
         const { vehicleMakeList } = this.state;
         return vehicleMakeList.map(e => ({
-            vehicleMakeName: e.vehicleMakeName,
+            vehicleMake: e.vehicleMake,
             action: e._id,
         }));
     }
@@ -53,9 +60,8 @@ class vehicleMakeComponent extends Component {
                 columns={[{ Header: '', columns: this.renderColumn() }]}
                 noDataText="No Record Found"
                 data={rows}
-                showPageSizeOptions={false}
-                pageSize={3}
-                showPagination={false}
+                showPageSizeOptions
+                showPagination
             />
         );
     }
@@ -81,10 +87,17 @@ class vehicleMakeComponent extends Component {
         window.$('#vehicleMakeCreate').modal('hide');
     }
 
-    handleSubmit() {
+    async handleSubmit() {
         const { vehicleMakeName } = this.state;
         // eslint-disable-next-line no-console
         console.log('vehicleMake: ', vehicleMakeName);
+
+        await axios.post(`${ process.env.API_URI }/vehicleMake`, { vehicleMake: vehicleMakeName });
+        const { data } = await axios.get(`${ process.env.API_URI }/vehicleMake`);
+        this.setState({
+            vehicleMakeList: data,
+        });
+        window.$('#vehicleMakeCreate').modal('hide');
     }
 
     renderModel() {
@@ -104,7 +117,7 @@ class vehicleMakeComponent extends Component {
                             <div className="row">
                                 <div className="col-lg-6">
                                     <div className="form-group">
-                                        <label className="form-label">vehicleMake Name</label>
+                                        <label className="form-label">Vehicle Make</label>
                                         <div className="controls">
                                             <input type="text" className="form-control" name="vehicleMakeName" value={vehicleMakeName} onChange={(e) => { this.handleChange('vehicleMakeName', e); }} />
                                         </div>

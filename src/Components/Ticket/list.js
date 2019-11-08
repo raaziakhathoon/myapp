@@ -14,9 +14,20 @@ class TicketComponent extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            TicketList: [],
-            TicketName: '',
+            ticketList: [],
+            ticketNo: '',
+            status: '',
+            ticketStatus: '',
+            isReusable: '',
+            isUsed: '',
         };
+    }
+
+    async componentDidMount() {
+        const { data } = await axios.get(`${ process.env.API_URI }/ticket`);
+        this.setState({
+            ticketList: data,
+        });
     }
 
     // eslint-disable-next-line class-methods-use-this
@@ -24,8 +35,24 @@ class TicketComponent extends Component {
     renderColumn() {
         return ([
             {
-                Header: 'Ticket Name',
-                accessor: 'TicketName',
+                Header: 'Ticket No',
+                accessor: 'ticketNo',
+            },
+            {
+                Header: 'Status',
+                accessor: 'status',
+            },
+            {
+                Header: 'Ticket Status',
+                accessor: 'ticketStatus',
+            },
+            {
+                Header: 'Is Reusable',
+                accessor: 'isReusable',
+            },
+            {
+                Header: 'Is Used',
+                accessor: 'isUsed',
             },
             {
                 Header: 'Action',
@@ -37,9 +64,13 @@ class TicketComponent extends Component {
     }
 
     renderTableData() {
-        const { TicketList } = this.state;
-        return TicketList.map(e => ({
-            TicketName: e.TicketName,
+        const { ticketList } = this.state;
+        return ticketList.map(e => ({
+            ticketNo: e.ticketNo,
+            status: e.status,
+            ticketStatus: e.ticketStatus,
+            isReusable: e.isReusable,
+            isUsed: e.isUsed,
             action: e._id,
         }));
     }
@@ -53,9 +84,8 @@ class TicketComponent extends Component {
                 columns={[{ Header: '', columns: this.renderColumn() }]}
                 noDataText="No Record Found"
                 data={rows}
-                showPageSizeOptions={false}
-                pageSize={3}
-                showPagination={false}
+                showPageSizeOptions
+                showPagination
             />
         );
     }
@@ -69,29 +99,36 @@ class TicketComponent extends Component {
     }
 
     // eslint-disable-next-line class-methods-use-this
-    handleCreateTicket() {
-        window.$('#TicketCreate').modal('show');
+    handleCreateticket() {
+        window.$('#ticketCreate').modal('show');
     }
 
     // eslint-disable-next-line class-methods-use-this
     handleCloseModel() {
         this.setState({
-            TicketName: '',
+            ticketNo: '',
         });
-        window.$('#TicketCreate').modal('hide');
+        window.$('#ticketCreate').modal('hide');
     }
 
-    handleSubmit() {
-        const { TicketName } = this.state;
+    async handleSubmit() {
+        const { ticketName } = this.state;
         // eslint-disable-next-line no-console
-        console.log('Ticket: ', TicketName);
+        console.log('Ticket: ', ticketName);
+
+        await axios.post(`${ process.env.API_URI }/ticket`, { ...this.state });
+        const { data } = await axios.get(`${ process.env.API_URI }/ticket`);
+        this.setState({
+            ticketList: data,
+        });
+        window.$('#ticketCreate').modal('hide');
     }
 
     renderModel() {
-        const { TicketName } = this.state;
+        const { ticketNo, status, ticketStatus, isReusable, isUsed } = this.state;
         // xl / sm /  md /
         return (
-            <div className="modal fade" id="TicketCreate" tabIndex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="createTicket" aria-hidden="true">
+            <div className="modal fade" id="ticketCreate" tabIndex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="createTicket" aria-hidden="true">
                 <div className="modal-dialog modal-md" role="document">
                     <div className="modal-content">
                         <div className="modal-header">
@@ -99,21 +136,53 @@ class TicketComponent extends Component {
                             <button type="button" className="close" data-dismiss="modal" aria-label="Close" onClick={() => { this.handleCloseModel(); }}>
                                 <span aria-hidden="true">&times;</span>
                             </button>
-                        </div>
-                        <div className="modal-body">
-                            <div className="row">
-                                <div className="col-lg-6">
-                                    <div className="form-group">
-                                        <label className="form-label">Ticket Name</label>
-                                        <div className="controls">
-                                            <input type="text" className="form-control" name="TicketName" value={TicketName} onChange={(e) => { this.handleChange('TicketName', e); }} />
+                            <div className="modal-body">
+                                <div className="row">
+                                    <div className="col-lg-6">
+                                        <div className="form-group">
+                                            <label className="form-label">Ticket No</label>
+                                            <div className="controls">
+                                                <input type="text" className="form-control" name="ticketNo" value={ticketNo} onChange={(e) => { this.handleChange('ticketNo', e); }} />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="col-lg-6">
+                                        <div className="form-group">
+                                            <label className="form-label">Status</label>
+                                            <div className="controls">
+                                                <input type="text" className="form-control" name="status" value={status} onChange={(e) => { this.handleChange('status', e); }} />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="col-lg-6">
+                                        <div className="form-group">
+                                            <label className="form-label">ticket Status </label>
+                                            <div className="controls">
+                                                <input type="text" className="form-control" name="ticketStatus" value={ticketStatus} onChange={(e) => { this.handleChange('ticketStatus', e); }} />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="col-lg-6">
+                                        <div className="form-group">
+                                            <label className="form-label">Is Reusable</label>
+                                            <div className="controls">
+                                                <input type="text" className="form-control" name="isReusable" value={isReusable} onChange={(e) => { this.handleChange('isReusable', e); }} />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="col-lg-6">
+                                        <div className="form-group">
+                                            <label className="form-label">Is Used</label>
+                                            <div className="controls">
+                                                <input type="text" className="form-control" name="isUsed" value={isUsed} onChange={(e) => { this.handleChange('isUsed', e); }} />
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div className="modal-footer">
-                            <button type="button" className="btn btn-success" onClick={() => this.handleSubmit()}>Save</button>
+                            <div className="modal-footer">
+                                <button type="button" className="btn btn-success" onClick={() => this.handleSubmit()}>Save</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -122,14 +191,13 @@ class TicketComponent extends Component {
     }
 
     render() {
-        const { match } = this.props;
         return (
             <div className="col-lg-12">
                 <section className="box ">
                     <header className="panel_header">
                         <h2 className="title pull-left">Ticket</h2>
                         <div className="actions panel_actions pull-right">
-                            <button type="submit" className="btn btn-success" onClick={() => { this.handleCreateTicket(); }}>Add Ticket</button>
+                            <button type="submit" className="btn btn-success" onClick={() => { this.handleCreateticket(); }}>Add Ticket</button>
                         </div>
                     </header>
                 </section>
@@ -157,3 +225,4 @@ class TicketComponent extends Component {
 }
 
 export default TicketComponent;
+

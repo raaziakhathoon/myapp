@@ -68,7 +68,7 @@ class Header extends Component {
                             </div>
                         </li>
                     </ul>
-                    <ul className="navbar-nav my-2 my-lg-0">
+                    <ul className="navbar-nav my-2 my-lg-0" style={{ cursor: 'pointer' }}>
                         <li className="nav-item dropdown">
                             <a className="nav-link dropdown-toggle" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i className="fa fa-user" />

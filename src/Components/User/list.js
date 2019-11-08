@@ -6,29 +6,28 @@ import './index.scss';
 
 /**
  * @class
- * @name Driver
+ * @name User
  * @extends Component
- * @description Driver Component mounts at `/` route
+ * @description User Component mounts at `/` route
  */
-class DriverComponent extends Component {
+class UserComponent extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            driverList: [],
-            driverNo: '',
+            userList: [],
             firstName: '',
             lastName: '',
             mobileNo: '',
-            dob: '',
-            nationality: '',
+            email: '',
+            password: '',
+            userName: '',
         };
     }
 
     async componentDidMount() {
-        const { data } = await axios.get(`${ process.env.API_URI }/driver`);
+        const { data } = await axios.get(`${ process.env.API_URI }/user`);
         this.setState({
-            driverList: data,
-
+            userList: data,
         });
     }
 
@@ -36,10 +35,6 @@ class DriverComponent extends Component {
     // eslint-disable-next-line react/sort-comp
     renderColumn() {
         return ([
-            {
-                Header: 'Driver No',
-                accessor: 'driverNo',
-            },
             {
                 Header: 'First Name',
                 accessor: 'firstName',
@@ -53,12 +48,16 @@ class DriverComponent extends Component {
                 accessor: 'mobileNo',
             },
             {
-                Header: 'DOB',
-                accessor: 'dob',
+                Header: 'Email',
+                accessor: 'email',
             },
             {
-                Header: 'Nationality',
-                accessor: 'nationality',
+                Header: 'Password',
+                accessor: 'password',
+            },
+            {
+                Header: 'User Name',
+                accessor: 'userName',
             },
             {
                 Header: 'Action',
@@ -70,14 +69,14 @@ class DriverComponent extends Component {
     }
 
     renderTableData() {
-        const { driverList } = this.state;
-        return driverList.map(e => ({
-            driverNo: e.driverNo,
+        const { userList } = this.state;
+        return userList.map(e => ({
             firstName: e.firstName,
             lastName: e.lastName,
             mobileNo: e.mobileNo,
-            dob: e.dob,
-            nationality: e.nationality,
+            email: e.email,
+            password: e.password,
+            userName: e.userName,
             action: e._id,
         }));
     }
@@ -106,51 +105,49 @@ class DriverComponent extends Component {
     }
 
     // eslint-disable-next-line class-methods-use-this
-    handleCreateDriver() {
-        window.$('#driverCreate').modal('show');
+    handleCreateuser() {
+        window.$('#userCreate').modal('show');
     }
 
     // eslint-disable-next-line class-methods-use-this
     handleCloseModel() {
         this.setState({
-            driverName: '',
+            userName: '',
         });
-        window.$('#driverCreate').modal('hide');
+        window.$('#userCreate').modal('hide');
     }
 
     async handleSubmit() {
-        await axios.post(`${ process.env.API_URI }/driver`, { ...this.state });
-        const { data } = await axios.get(`${ process.env.API_URI }/driver`);
+        const { userName } = this.state;
+        // eslint-disable-next-line no-console
+        console.log('user: ', userName);
+
+        await axios.post(`${ process.env.API_URI }/user`, { ...this.state });
+        const { data } = await axios.get(`${ process.env.API_URI }/user`);
         this.setState({
-            driverList: data,
+            userList: data,
         });
-        window.$('#driverCreate').modal('hide');    
+        window.$('#userCreate').modal('hide');
     }
 
     renderModel() {
-        const { driverNo, firstName, lastName, mobileNo, dob, nationality } = this.state;
+        const { 
+            firstName, lastName, mobileNo, email, password, userName,
+        } = this.state;
         // xl / sm /  md /
         return (
-            <div className="modal fade" id="driverCreate" tabIndex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="createDriver" aria-hidden="true">
+            <div className="modal fade" id="userCreate" tabIndex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="createuser" aria-hidden="true">
                 <div className="modal-dialog modal-md" role="document">
                     <div className="modal-content">
                         <div className="modal-header">
-                            <h5 className="modal-title" id="exampleModalLabel">Create Driver</h5>
+                            <h5 className="modal-title" id="exampleModalLabel">Create User</h5>
                             <button type="button" className="close" data-dismiss="modal" aria-label="Close" onClick={() => { this.handleCloseModel(); }}>
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
                         <div className="modal-body">
                             <div className="row">
-                                <div className="col-lg-4">
-                                    <div className="form-group">
-                                        <label className="form-label">Driver No</label>
-                                        <div className="controls">
-                                            <input type="text" className="form-control" name="driverNo" value={driverNo} onChange={(e) => { this.handleChange('driverNo', e); }} />
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="col-lg-4">
+                                <div className="col-lg-6">
                                     <div className="form-group">
                                         <label className="form-label">First Name</label>
                                         <div className="controls">
@@ -158,7 +155,7 @@ class DriverComponent extends Component {
                                         </div>
                                     </div>
                                 </div>
-                                <div className="col-lg-4">
+                                <div className="col-lg-6">
                                     <div className="form-group">
                                         <label className="form-label">Last Name</label>
                                         <div className="controls">
@@ -166,27 +163,35 @@ class DriverComponent extends Component {
                                         </div>
                                     </div>
                                 </div>
-                                <div className="col-lg-4">
+                                <div className="col-lg-6">
                                     <div className="form-group">
-                                        <label className="form-label">Mobile NO</label>
+                                        <label className="form-label">Mobile No</label>
                                         <div className="controls">
                                             <input type="text" className="form-control" name="mobileNo" value={mobileNo} onChange={(e) => { this.handleChange('mobileNo', e); }} />
                                         </div>
                                     </div>
                                 </div>
-                                <div className="col-lg-4">
+                                <div className="col-lg-6">
                                     <div className="form-group">
-                                        <label className="form-label">DOB</label>
+                                        <label className="form-label">Email</label>
                                         <div className="controls">
-                                            <input type="text" className="form-control" name="dob" value={dob} onChange={(e) => { this.handleChange('dob', e); }} />
+                                            <input type="text" className="form-control" name="email" value={email} onChange={(e) => { this.handleChange('email', e); }} />
                                         </div>
                                     </div>
                                 </div>
-                                <div className="col-lg-4">
+                                <div className="col-lg-6">
                                     <div className="form-group">
-                                        <label className="form-label">Nationality</label>
+                                        <label className="form-label">Password</label>
                                         <div className="controls">
-                                            <input type="text" className="form-control" name="nationality" value={nationality} onChange={(e) => { this.handleChange('nationality', e); }} />
+                                            <input type="text" className="form-control" name="password" value={password} onChange={(e) => { this.handleChange('password', e); }} />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="col-lg-6">
+                                    <div className="form-group">
+                                        <label className="form-label">User Name</label>
+                                        <div className="controls">
+                                            <input type="text" className="form-control" name="userName" value={userName} onChange={(e) => { this.handleChange('userName', e); }} />
                                         </div>
                                     </div>
                                 </div>
@@ -206,9 +211,9 @@ class DriverComponent extends Component {
             <div className="col-lg-12">
                 <section className="box ">
                     <header className="panel_header">
-                        <h2 className="title pull-left">Driver</h2>
+                        <h2 className="title pull-left">User</h2>
                         <div className="actions panel_actions pull-right">
-                            <button type="submit" className="btn btn-success" onClick={() => { this.handleCreateDriver(); }}>Add Driver</button>
+                            <button type="submit" className="btn btn-success" onClick={() => { this.handleCreateuser(); }}>Add User</button>
                         </div>
                     </header>
                 </section>
@@ -235,4 +240,4 @@ class DriverComponent extends Component {
     }
 }
 
-export default DriverComponent;
+export default UserComponent;

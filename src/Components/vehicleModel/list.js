@@ -19,13 +19,20 @@ class vehicleModelComponent extends Component {
         };
     }
 
+    async componentDidMount() {
+        const { data } = await axios.get(`${ process.env.API_URI }/vehicleModel`);
+        this.setState({
+            vehicleModelList: data,
+        });
+    }
+
     // eslint-disable-next-line class-methods-use-this
     // eslint-disable-next-line react/sort-comp
     renderColumn() {
         return ([
             {
-                Header: 'vehicleModel Name',
-                accessor: 'vehicleModelName',
+                Header: 'vehicle Model',
+                accessor: 'vehicleModel',
             },
             {
                 Header: 'Action',
@@ -39,7 +46,7 @@ class vehicleModelComponent extends Component {
     renderTableData() {
         const { vehicleModelList } = this.state;
         return vehicleModelList.map(e => ({
-            vehicleModelName: e.vehicleModelName,
+            vehicleModel: e.vehicleModel,
             action: e._id,
         }));
     }
@@ -53,9 +60,8 @@ class vehicleModelComponent extends Component {
                 columns={[{ Header: '', columns: this.renderColumn() }]}
                 noDataText="No Record Found"
                 data={rows}
-                showPageSizeOptions={false}
-                pageSize={3}
-                showPagination={false}
+                showPageSizeOptions
+                showPagination
             />
         );
     }
@@ -81,10 +87,17 @@ class vehicleModelComponent extends Component {
         window.$('#vehicleModelCreate').modal('hide');
     }
 
-    handleSubmit() {
+    async handleSubmit() {
         const { vehicleModelName } = this.state;
         // eslint-disable-next-line no-console
         console.log('vehicleModel: ', vehicleModelName);
+
+        await axios.post(`${ process.env.API_URI }/vehicleModel`, { vehicleModel: vehicleModelName });
+        const { data } = await axios.get(`${ process.env.API_URI }/vehicleModel`);
+        this.setState({
+            vehicleModelList: data,
+        });
+        window.$('#vehicleModelCreate').modal('hide');
     }
 
     renderModel() {
@@ -104,7 +117,7 @@ class vehicleModelComponent extends Component {
                             <div className="row">
                                 <div className="col-lg-6">
                                     <div className="form-group">
-                                        <label className="form-label">vehicleModel Name</label>
+                                        <label className="form-label">Vehicle Model</label>
                                         <div className="controls">
                                             <input type="text" className="form-control" name="vehicleModelName" value={vehicleModelName} onChange={(e) => { this.handleChange('vehicleModelName', e); }} />
                                         </div>
