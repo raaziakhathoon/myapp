@@ -58,13 +58,7 @@ class Header extends Component {
                                 Master
                             </a>
                             <div className="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                                <Link className="dropdown-item" to="/vehicleColor">Vehicle Make</Link>
-                                <Link className="dropdown-item" to="/vehicleMake">Vehicle Color</Link>
-                                <Link className="dropdown-item" to="/vehicleModel">Vehicle Model</Link>
-                                <Link className="dropdown-item" to="/city">City</Link>
-                                <Link className="dropdown-item" to="/driver">Driver</Link>
-                                <Link className="dropdown-item" to="/ticket">Ticket</Link>
-                                <Link className="dropdown-item" to="/user">User</Link>
+                                <Link className="dropdown-item" to="/vehicleColor">Form</Link>
                             </div>
                         </li>
                     </ul>
@@ -72,7 +66,7 @@ class Header extends Component {
                         <li className="nav-item dropdown">
                             <a className="nav-link dropdown-toggle" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i className="fa fa-user" />
-                                    Profile
+                                    Raazia
                             </a>
                             <div className="dropdown-menu dropdown-menu-right dropdown-info" aria-labelledby="navbarDropdownMenuLink-4">
                                 <a className="dropdown-item" href="#">My account</a>
