@@ -16,7 +16,7 @@
     "download": "^7.1.0",
     "file-loader": "^4.0.0",
     "fs": "^0.0.1-security",
-    "jquery": "^3.4.1",
+    "jquery": "^3.5.0",
     "moment": "^2.24.0",
     "mui-datatables": "^2.9.0",
     "qs": "^6.6.0",
